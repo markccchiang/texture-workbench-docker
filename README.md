@@ -200,28 +200,6 @@ The `Dockerfile` has four stages:
 4. **runtime:** a slim Node.js image with only what the application needs, running as the unprivileged `node` user,
    with a health check on `/api/v1/health`.
 
-## Publishing to Docker Hub
-
-Build both platforms and push them under one tag with `docker buildx`. On an Apple Silicon Mac the `linux/amd64` half
-is built under emulation, which takes longer (roughly 20–40 minutes the first time).
-
-```bash
-docker login -u markccchiang                  # with a Docker Hub Personal Access Token as the password
-
-docker buildx create --name multiarch --use   # once; the default builder cannot push multi-platform images
-docker buildx build --platform linux/amd64,linux/arm64 \
-    -t markccchiang/texture-workbench:latest \
-    -t markccchiang/texture-workbench:0.1.0 \
-    --push .
-```
-
-Tag each release with the texture-workbench version it contains (and build that version with `--build-arg GIT_REF`),
-so that users can pin a version instead of `latest`. Check what was pushed with:
-
-```bash
-docker buildx imagetools inspect markccchiang/texture-workbench:latest
-```
-
 ## Troubleshooting
 
 - **The web app keeps asking for the token:** the container made a new token when it started. Get the current one with
