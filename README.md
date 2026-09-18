@@ -154,10 +154,47 @@ The full list is in the
 ## Security
 
 The server speaks plain HTTP. The commands above publish it on `127.0.0.1` only, so it can be reached from your own
-computer but not from the network. To share it with other people, keep that binding and put a reverse proxy with HTTPS
-in front of it, with `GLCM_TRUST_PROXY=true`. See the
-[deployment guide](https://github.com/markccchiang/texture-workbench/blob/main/doc/deployment.md), which also has a
-security checklist.
+computer but not from the network. To let other people use it, see the next section. The
+[deployment guide](https://github.com/markccchiang/texture-workbench/blob/main/doc/deployment.md) has a security
+checklist.
+
+## Sharing the server with other users
+
+1. **Start it with a fixed token.** A generated token changes on every restart, which would lock users out:
+
+   ```bash
+   export GLCM_API_TOKEN="$(openssl rand -base64 32)"
+   docker run -d --name texture-workbench --restart unless-stopped \
+       -p 127.0.0.1:8080:8080 -v texture-data:/data \
+       -e GLCM_API_TOKEN -e GLCM_TRUST_PROXY=true \
+       markccchiang/texture-workbench
+   ```
+
+2. **Put an HTTPS reverse proxy in front of it,** so the token is never sent unencrypted. With
+   [Caddy](https://caddyserver.com), which obtains the certificate itself:
+
+   ```
+   texture.example.org {
+       reverse_proxy 127.0.0.1:8080
+   }
+   ```
+
+   For nginx, see the
+   [deployment guide](https://github.com/markccchiang/texture-workbench/blob/main/doc/deployment.md#https-reverse-proxy):
+   it needs larger uploads allowed and response buffering turned off.
+
+3. **Give users the address and the token.** Send the token privately, e.g. through a password manager, not by email
+   or in a group chat. You can read it back with `docker exec texture-workbench printenv GLCM_API_TOKEN`.
+   - In the web app, users enter it when asked. It is kept for that browser tab only.
+   - On the command line, with `--server` and `--token`, for example from their own computer:
+
+     ```bash
+     docker run --rm -v "$PWD":/work -w /work markccchiang/texture-workbench \
+         glcm measure image.png --server https://texture.example.org --token "$TOKEN" --out results.csv
+     ```
+
+Everyone shares the same token and the same data; there are no separate user accounts. To take access away, start a
+new container with a new token; users are asked for the new one on their next request.
 
 ## Building the image yourself
 
