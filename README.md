@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="images/logo-wordmark-dark.svg">
+    <img src="images/logo-wordmark.svg" alt="Texture Workbench" width="346">
+  </picture>
+</p>
+
 # Texture Workbench in Docker
 
 A Docker image of [Texture Workbench](https://github.com/markccchiang/texture-workbench), a web application that measures
