@@ -186,6 +186,9 @@ checklist.
 3. **Give users the address and the token.** Send the token privately, e.g. through a password manager, not by email
    or in a group chat. You can read it back with `docker exec texture-workbench printenv GLCM_API_TOKEN`.
    - In the web app, users enter it when asked. It is kept for that browser tab only.
+
+     <img src="images/token-prompt.png" alt="The Texture Workbench web app at texture.example.org, with the Access token dialog: This server requires an access token. Ask its administrator for it (the server's GLCM_API_TOKEN). A token field and a Continue button." width="720">
+
    - On the command line, with `--server` and `--token`, for example from their own computer:
 
      ```bash
