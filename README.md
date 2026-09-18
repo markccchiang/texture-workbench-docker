@@ -237,6 +237,9 @@ docker buildx imagetools inspect markccchiang/texture-workbench:latest
 
 ## License
 
-Texture Workbench is released under the
-[MIT License](https://github.com/markccchiang/texture-workbench/blob/main/LICENSE). Its sample images and dependencies
-keep their own licenses; see the texture-workbench repository.
+The `Dockerfile` and this documentation are released under the [MIT License](LICENSE).
+
+Texture Workbench itself is also released under the
+[MIT License](https://github.com/markccchiang/texture-workbench/blob/main/LICENSE). Its sample images and the software in
+the image (OpenCV, Node.js, Debian packages and the other dependencies) keep their own licenses; see the texture-workbench
+repository.
